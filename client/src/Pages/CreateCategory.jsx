@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Header from "./Components/Header/Header.jsx";
 import CategoryForm from "./Components/Category/CategoryForm.jsx";
 import CategoryTable from "./Components/Category/CategoryTable.jsx";
@@ -7,7 +8,14 @@ import "./css/style.css";
 import "./css/media.css";
 
 function CreateCategory() {
-  setUpIcons();
+  useEffect(() => {
+    setUpIcons();
+  }, []);
+  let [tableItems, setTable] = useState([]);
+
+  function resetTable() {
+    setTable([]);
+  }
 
   return (
     <>
@@ -15,8 +23,8 @@ function CreateCategory() {
       <main className={styles["main-container"]}>
         <h1 className={styles["categorize-heading"]}>categorize</h1>
         <div className={styles["categorize-container"]}>
-          <CategoryForm />
-          <CategoryTable />
+          <CategoryForm resetTable={resetTable} />
+          <CategoryTable tableItems={tableItems} setTable={setTable} />
         </div>
       </main>
     </>

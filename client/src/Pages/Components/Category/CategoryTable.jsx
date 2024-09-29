@@ -1,42 +1,33 @@
 import { useState, useEffect } from "react";
 import styles from "./category.module.css";
 
+function CategoryTable({ tableItems, setTable }) {
+  let [currentLevel, setCurrentLevel] = useState(["."]);
 
-function CategoryTable() {
-	// let categories = {"frontend": ["html", "css"]},
-	// 	tutorials = {"html": ["html forms", "html text"], "css": ["animtion", "media quires"]},
-	// 	sections = {"html forms": ["text input", "email input"], "html text": ["paragrahp", "headings"], "animtion": ["basics"]};
-	let [tableItems, setTable] = useState([]),
-		[currentLevel, setCurrentLevel] = useState([".", "frontend"]);
+  useEffect(() => {
+    displayTableItems();
+  }, [tableItems]);
 
-	//useEffect(() => { 
-	//	displayTableItems()
-	//}, []);
-	
-	//async function displayTableItems() {
-	//	let lvlLen = currentLevel.length,
-	//		response = await fetch("http://localhost:9090/api/dashboard/category/get");
-	//
-	//	response.json().then(data => data.map((ele, ind) => {
-	//		return (
-	//			<tr key={ind}>
-	//				<td><input type="checkbox" value={ind} /></td>
-	//				<td>{ele.name}</td>
-	//				<td>{ele.index}</td>
-	//				<td>{ele.creation_time}</td>
-	//				<td>{ele.modifcation_time}</td>
-	//				<td>{ele.cateogry}</td>
-	//				<td>{ele.tutorial}</td>
-	//				<td>{ele.section}</td>
-	//				<td>{ele.children}</td>
-	//			</tr>
-	//		)
-	//	})).then((elements) => {
-	//		setTable(elements);
-	//	})
-	//}
+  async function displayTableItems() {
+    const fetchSetting = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ levels: currentLevel }),
+    };
+    const response = await fetch(
+      "http://localhost:5000/api/dashboard/tagging/filter_one",
+      fetchSetting
+    );
 
-	return (
+    response.json().then((data) => {
+      setTable([]);
+      for (const [key, value] of Object.entries(JSON.parse(data.data))) {
+        setTable((t) => [...t, value]);
+      }
+    });
+  }
+
+  return (
     <section>
       <div className={styles["categorize-tools"]}>
         <div className={styles["table-tools"]}>
@@ -48,9 +39,13 @@ function CategoryTable() {
           <button className={styles["table-button"]}>apply</button>
         </div>
         <div className={styles["categorize-nav"]}>
-					{currentLevel.map((level, index) => {
-						return <span key={index} className={styles["nav-preview"]}>{level}</span>
-					})}
+          {currentLevel.map((level, index) => {
+            return (
+              <span key={index} className={styles["nav-preview"]}>
+                {level}
+              </span>
+            );
+          })}
         </div>
       </div>
       <table>
@@ -75,18 +70,29 @@ function CategoryTable() {
           </tr>
         </thead>
         <tbody>
-					{ tableItems }
-          <tr>
-            <td><input type="checkbox" name="edit" value="1" /></td>
-            <td>input element</td>
-            <td>1</td>
-            <td>1920/10/11</td>
-            <td>2024/11/11</td>
-            <td>front end</td>
-            <td>html</td>
-            <td>html forms</td>
-            <td>0</td>
-          </tr>
+          {tableItems.map((data, ind) => {
+            let creation_time = new Date(
+                data.creation_date["$date"]
+              ).toLocaleDateString(),
+              modification_date = new Date(
+                data.modification_date["$date"]
+              ).toLocaleDateString();
+            return (
+              <tr key={ind}>
+                <td>
+                  <input type="checkbox" value={ind} />
+                </td>
+                <td>{data.name}</td>
+                <td>{data.index}</td>
+                <td>{creation_time}</td>
+                <td>{modification_date}</td>
+                <td>{data.category}</td>
+                <td>{data.tutorial}</td>
+                <td>{data.section}</td>
+                <td>{data.children}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
       <div className={styles["categorize-tools"]}>
@@ -106,7 +112,7 @@ function CategoryTable() {
         </div>
       </div>
     </section>
-	);
+  );
 }
 
 export default CategoryTable;

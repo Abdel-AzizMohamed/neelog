@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import styles from "./category.module.css";
 
-function CategoryForm() {
+function CategoryForm({ resetTable }) {
   let [name, setName] = useState("-"),
     [category, setCategory] = useState("-"),
-    [categoryItems, setCategoryItems] = useState(["-"]),
     [tutorial, setTutorial] = useState("-"),
+    [categoryItems, setCategoryItems] = useState(["-"]),
     [tutorialItems, setTutorialItems] = useState(["-"]);
 
-  useEffect(() => fetchData(), [category]);
+  useEffect(() => {
+    fetchData();
+  }, [category]);
 
   async function insertData(e) {
     e.preventDefault();
@@ -21,9 +23,14 @@ function CategoryForm() {
         tutorial: tutorial,
       }),
     };
-    let response = await fetch("http://localhost:9090/api/dashboard/category/insert", fetchSetting);
+    let response = await fetch(
+      "http://localhost:5000/api/dashboard/tagging/insert",
+      fetchSetting
+    );
 
     response.json().then((res) => console.log(res));
+    fetchData();
+    resetTable();
   }
 
   async function fetchData() {
@@ -34,27 +41,25 @@ function CategoryForm() {
         category: category,
       }),
     };
-    let response = await fetch("http://localhost:9090/api/dashboard/category/get", fetchSetting);
+    let response = await fetch(
+      "http://localhost:5000/api/dashboard/tagging/filter_all",
+      fetchSetting
+    );
 
-    response.json().then(res => {
+    response.json().then((res) => {
       console.log(res.massage);
 
       for (const [key, value] of Object.entries(JSON.parse(res.data))) {
         if (key === "categories")
-          setCategoryItems(["-", ...value.map(ele => ele.name)]);
+          setCategoryItems(["-", ...value.map((ele) => ele.name)]);
         else if (key === "tutorials")
-          setTutorialItems(["-", ...value.map(ele => ele.name)]);
+          setTutorialItems(["-", ...value.map((ele) => ele.name)]);
       }
-    })
+    });
   }
 
   return (
-    <form action="" method="" onSubmit={() => 
-      {
-        insertData()
-        fetchData()
-      }
-    }>
+    <form action="" method="" onSubmit={insertData}>
       <h2 className={styles["form-title"]}>Category add</h2>
       <div className={styles["field-group"]}>
         <label>name</label>
@@ -67,15 +72,19 @@ function CategoryForm() {
       </div>
       <div className={styles["field-group"]}>
         <label>Category</label>
-        <select onChange={e => setCategory(e.target.value)}>
-          {categoryItems.map(data => <option key={data}>{data}</option>)}
+        <select onChange={(e) => setCategory(e.target.value)}>
+          {categoryItems.map((data) => (
+            <option key={data}>{data}</option>
+          ))}
         </select>
         <span>The category that will be added to.</span>
       </div>
       <div className={styles["field-group"]}>
         <label>Tutorial</label>
-        <select onChange={e => setTutorial(e.target.value)}>
-          {tutorialItems.map(data => <option key={data}>{data}</option>)}
+        <select onChange={(e) => setTutorial(e.target.value)}>
+          {tutorialItems.map((data) => (
+            <option key={data}>{data}</option>
+          ))}
         </select>
         <span>The tutorial that will be added to.</span>
       </div>

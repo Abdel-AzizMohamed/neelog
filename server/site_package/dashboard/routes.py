@@ -14,31 +14,51 @@ from bson.objectid import ObjectId
 dashboard = Blueprint("dashboard", __name__)
 
 
-@dashboard.route("/api/dashboard/category/get", methods=["POST"])
-def get_category():
-    """Retrive categories from database"""
-    category = request.json.get("category")
+@dashboard.route("/api/dashboard/tagging/filter_one", methods=["POST"])
+def get_one_tagging():
+    """Retrieve one Connected tagging data"""
+    levels = request.json.get("levels")
+    current_level = levels[-1]
+    max_level = len(levels)
 
-    categoriez_data = {"categories": [], "tutorials": []}
+    if max_level == 1:
+        filter_data = categories.find()
+
+    return jsonify({"massage": "success!", "data": json_util.dumps(filter_data)})
+
+
+@dashboard.route("/api/dashboard/tagging/filter_all", methods=["POST"])
+def get_all_tagging():
+    """Retrieve all Connected tagging data if specified"""
+    category = request.json.get("category", "-")
+    tutorial = request.json.get("tutorial", "-")
+
+    filter_data = {"categories": [], "tutorials": [], "sections": []}
+
     for item in categories.find():
-        categoriez_data["categories"].append(item)
+        filter_data["categories"].append(item)
 
     if category != "-":
         category_id = categories.find_one({"name": category}).get("_id")
+
         for item in tutorials.find({"category": ObjectId(category_id)}):
-            print(item)
-            categoriez_data["tutorials"].append(item)
+            filter_data["tutorials"].append(item)
 
-    return jsonify({"massage": "success!", "data": json_util.dumps(categoriez_data)})
+    if tutorial != "-":
+        tutorial_id = tutorials.find_one({"name": tutorial}).get("_id")
+
+        for item in sections.find({"tutorial": ObjectId(tutorial_id)}):
+            filter_data["sections"].append(item)
+
+    return jsonify({"massage": "success!", "data": json_util.dumps(filter_data)})
 
 
-@dashboard.route("/api/dashboard/category/insert", methods=["POST"])
+@dashboard.route("/api/dashboard/tagging/insert", methods=["POST"])
 def insert_category():
     """Insert a new category into the database"""
     name = request.json.get("name")
     category = request.json.get("category")
     tutorial = request.json.get("tutorial")
-    print(category)
 
     if tutorial != "-":
         tutorial_id = tutorials.find_one({"name": name})
@@ -49,7 +69,7 @@ def insert_category():
                 "category": category,
                 "tutorial": tutorial_id,
                 "creation_date": datetime.now(),
-                "modification_time": datetime.now(),
+                "modification_date": datetime.now(),
                 "children": 0,
             }
         )
@@ -61,7 +81,7 @@ def insert_category():
                 "index": 1,
                 "category": ObjectId(category_id),
                 "creation_date": datetime.now(),
-                "modification_time": datetime.now(),
+                "modification_date": datetime.now(),
                 "children": 0,
             }
         )
@@ -71,7 +91,7 @@ def insert_category():
                 "name": name,
                 "index": 1,
                 "creation_date": datetime.now(),
-                "modification_time": datetime.now(),
+                "modification_date": datetime.now(),
                 "children": 0,
             }
         )
