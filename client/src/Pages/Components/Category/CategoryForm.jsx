@@ -28,6 +28,7 @@ function CategoryForm({ resetTable }) {
       fetchSetting
     );
 
+    console.log("Insert");
     response.json().then((res) => console.log(res));
     fetchData();
     resetTable();

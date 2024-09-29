@@ -8,9 +8,7 @@ import "./css/style.css";
 import "./css/media.css";
 
 function CreateCategory() {
-  useEffect(() => {
-    setUpIcons();
-  }, []);
+  setUpIcons();
   let [tableItems, setTable] = useState([]);
 
   function resetTable() {

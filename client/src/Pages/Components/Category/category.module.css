@@ -190,11 +190,27 @@ section table {
     margin: 1rem 0;
     border: 1px solid var(--nat-600);
     border-radius: var(--base-radius);
+    border-collapse: separate;
+    border-spacing: 0;
     text-align: left;
 }
 
-section table tr {
+section table thead tr {
     border-bottom: 1px solid var(--nat-600);
+}
+
+section table tbody tr {
+    cursor: pointer;
+    transition: background var(--trans-dur);
+}
+
+section table tbody tr:nth-child(2n) {
+    background-color: var(--nat-200);
+}
+
+section table tbody tr:hover,
+section table tbody tr.active {
+    background-color: var(--brand-300);
 }
 
 section table th,
@@ -207,5 +223,24 @@ section table td {
     text-wrap: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+section table td.ceil-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    font-weight: 700;
+}
+
+section table td.ceil-container .tag-delete {
+    visibility: hidden;
+    margin-top: .5rem;
+    color: var(--red)
+}
+
+section table tbody tr:hover .tag-delete,
+section table tbody tr.active .tag-delete {
+    visibility: visible;
 }
 /* End Aside */

@@ -6,13 +6,14 @@ function CategoryTable({ tableItems, setTable }) {
 
   useEffect(() => {
     displayTableItems();
-  }, [tableItems]);
+  }, [tableItems.length, currentLevel]);
 
   async function displayTableItems() {
     const fetchSetting = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ levels: currentLevel }),
+      signal: AbortSignal.timeout(5000),
     };
     const response = await fetch(
       "http://localhost:5000/api/dashboard/tagging/filter_one",
@@ -41,7 +42,11 @@ function CategoryTable({ tableItems, setTable }) {
         <div className={styles["categorize-nav"]}>
           {currentLevel.map((level, index) => {
             return (
-              <span key={index} className={styles["nav-preview"]}>
+              <span
+                onClick={() => setCurrentLevel((c) => c.slice(0, index + 1))}
+                key={index}
+                className={styles["nav-preview"]}
+              >
                 {level}
               </span>
             );
@@ -78,11 +83,17 @@ function CategoryTable({ tableItems, setTable }) {
                 data.modification_date["$date"]
               ).toLocaleDateString();
             return (
-              <tr key={ind}>
+              <tr
+                key={ind}
+                onDoubleClick={(e) => setCurrentLevel((c) => [...c, data.name])}
+              >
                 <td>
                   <input type="checkbox" value={ind} />
                 </td>
-                <td>{data.name}</td>
+                <td className={styles["ceil-container"]}>
+                  <span className={styles["tag-name"]}>{data.name}</span>
+                  <span className={styles["tag-delete"]}>delete</span>
+                </td>
                 <td>{data.index}</td>
                 <td>{creation_time}</td>
                 <td>{modification_date}</td>
@@ -105,10 +116,17 @@ function CategoryTable({ tableItems, setTable }) {
           <button className={styles["table-button"]}>apply</button>
         </div>
         <div className={styles["categorize-nav"]}>
-          <span className={styles["nav-preview"]}>.</span>
-          <span className={styles["nav-preview"]}>frontend</span>
-          <span className={styles["nav-preview"]}>html</span>
-          <span className={styles["nav-preview"]}>html forms</span>
+          {currentLevel.map((level, index) => {
+            return (
+              <span
+                onClick={() => setCurrentLevel((c) => c.slice(0, index + 1))}
+                key={index}
+                className={styles["nav-preview"]}
+              >
+                {level}
+              </span>
+            );
+          })}
         </div>
       </div>
     </section>

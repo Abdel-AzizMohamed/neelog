@@ -2,16 +2,24 @@
 
 from datetime import datetime
 from flask import Blueprint, jsonify, request
-from site_package.modules import (
-    categories,
-    tutorials,
-    sections,
-)
+from site_package.modules import categories, tutorials, sections, articles
 from bson import json_util
 from bson.objectid import ObjectId
 
 
 dashboard = Blueprint("dashboard", __name__)
+
+
+def replace_id_field(data, replace_filter) -> list:
+    """"""
+    new_data = []
+
+    for item in data:
+        for name, value in replace_filter.items():
+            item[name] = value
+        new_data.append(item)
+
+    return new_data
 
 
 @dashboard.route("/api/dashboard/tagging/filter_one", methods=["POST"])
@@ -23,8 +31,29 @@ def get_one_tagging():
 
     if max_level == 1:
         filter_data = categories.find()
+    elif max_level == 2:
+        parent_id = categories.find_one({"name": current_level}).get("_id")
+        filter_data = tutorials.find({"category": ObjectId(parent_id)})
+        filter_data = replace_id_field(filter_data, {"category": current_level})
+    elif max_level == 3:
+        parent_id = tutorials.find_one({"name": current_level}).get("_id")
+        filter_data = sections.find({"tutorial": ObjectId(parent_id)})
+        filter_data = replace_id_field(
+            filter_data, {"category": levels[-2], "tutorial": current_level}
+        )
+    elif max_level == 4:
+        parent_id = sections.find_one({"name": current_level}).get("_id")
+        filter_data = articles.find({"section": ObjectId(parent_id)})
+        filter_data = replace_id_field(
+            filter_data,
+            {"category": levels[-3], "category": levels[-2], "section": current_level},
+        )
+    else:
+        return jsonify({"massage": "Reached the end of connections", "data": None})
 
-    return jsonify({"massage": "success!", "data": json_util.dumps(filter_data)})
+    return jsonify(
+        {"massage": "Fetched one Successfully!", "data": json_util.dumps(filter_data)}
+    )
 
 
 @dashboard.route("/api/dashboard/tagging/filter_all", methods=["POST"])
@@ -50,7 +79,9 @@ def get_all_tagging():
         for item in sections.find({"tutorial": ObjectId(tutorial_id)}):
             filter_data["sections"].append(item)
 
-    return jsonify({"massage": "success!", "data": json_util.dumps(filter_data)})
+    return jsonify(
+        {"massage": "Fetched all Successfully!", "data": json_util.dumps(filter_data)}
+    )
 
 
 @dashboard.route("/api/dashboard/tagging/insert", methods=["POST"])
@@ -61,12 +92,13 @@ def insert_category():
     tutorial = request.json.get("tutorial")
 
     if tutorial != "-":
-        tutorial_id = tutorials.find_one({"name": name})
+        category_id = categories.find_one({"name": category}).get("_id")
+        tutorial_id = tutorials.find_one({"name": tutorial}).get("_id")
         sections.insert_one(
             {
                 "name": name,
                 "index": 1,
-                "category": category,
+                "category": category_id,
                 "tutorial": tutorial_id,
                 "creation_date": datetime.now(),
                 "modification_date": datetime.now(),
@@ -96,4 +128,4 @@ def insert_category():
             }
         )
 
-    return jsonify({"Massage": "Success!"})
+    return jsonify({"Massage": "Inserted Successfully!"})
