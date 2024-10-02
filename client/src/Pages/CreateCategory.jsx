@@ -9,11 +9,14 @@ import "./css/media.css";
 
 function CreateCategory() {
   setUpIcons();
-  let [tableItems, setTable] = useState([]);
+  let [tableItems, setTable] = useState([]),
+    [operation, setOperation] = useState(""),
+    [selectedItems, setSelected] = useState([]);
 
-  function resetTable() {
-    setTable([]);
-  }
+  useEffect(() => {
+    let opData = selectedItems.length >= 1 ? operation || "edit" : "";
+    setOperation(opData);
+  }, [selectedItems.length]);
 
   return (
     <>
@@ -21,8 +24,17 @@ function CreateCategory() {
       <main className={styles["main-container"]}>
         <h1 className={styles["categorize-heading"]}>categorize</h1>
         <div className={styles["categorize-container"]}>
-          <CategoryForm resetTable={resetTable} />
-          <CategoryTable tableItems={tableItems} setTable={setTable} />
+          <CategoryForm
+            resetTable={setTable}
+            operation={operation}
+            selectedItems={selectedItems}
+          />
+          <CategoryTable
+            tableItems={tableItems}
+            setTable={setTable}
+            selectedItems={selectedItems}
+            setSelected={setSelected}
+          />
         </div>
       </main>
     </>

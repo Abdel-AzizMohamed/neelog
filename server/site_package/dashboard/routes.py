@@ -22,6 +22,15 @@ def replace_id_field(data, replace_filter) -> list:
     return new_data
 
 
+def get_collection(category: str, tutorial: str):
+    """"""
+    if tutorial != "-":
+        return sections
+    elif category != "-":
+        return tutorials
+    return categories
+
+
 @dashboard.route("/api/dashboard/tagging/filter_one", methods=["POST"])
 def get_one_tagging():
     """Retrieve one Connected tagging data"""
@@ -129,3 +138,38 @@ def insert_category():
         )
 
     return jsonify({"Massage": "Inserted Successfully!"})
+
+
+@dashboard.route("/api/dashboard/tagging/edit", methods=["POST"])
+def edit_category():
+    """edit a new category into the database"""
+    id = request.json.get("id")
+    name = request.json.get("name")
+    category = request.json.get("category")
+    tutorial = request.json.get("tutorial")
+
+    print(category)
+    print(tutorial)
+
+    collection = get_collection(category, tutorial)
+
+    categories.delete_one({"_id": ObjectId(id)})
+    tutorials.delete_one({"_id": ObjectId(id)})
+    sections.delete_one({"_id": ObjectId(id)})
+
+    category_id = categories.find_one({"name": category})
+    tutorial_id = tutorials.find_one({"name": tutorial})
+
+    collection.insert_one(
+        {
+            "name": name,
+            "index": 1,
+            "category": "-" if category_id is None else category_id.get("_id"),
+            "tutorial": "-" if tutorial_id is None else tutorial_id.get("_id"),
+            "creation_date": datetime.now(),
+            "modification_date": datetime.now(),
+            "children": 0,
+        }
+    )
+
+    return jsonify({"Massage": "Edited Successfully!"})

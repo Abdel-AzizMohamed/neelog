@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import styles from "./category.module.css";
 
-function CategoryTable({ tableItems, setTable }) {
+function CategoryTable({ tableItems, setTable, selectedItems, setSelected }) {
   let [currentLevel, setCurrentLevel] = useState(["."]);
 
   useEffect(() => {
     displayTableItems();
+    setSelected([]);
   }, [tableItems.length, currentLevel]);
 
   async function displayTableItems() {
@@ -23,6 +24,7 @@ function CategoryTable({ tableItems, setTable }) {
     response.json().then((data) => {
       setTable([]);
       for (const [key, value] of Object.entries(JSON.parse(data.data))) {
+        value.class = "";
         setTable((t) => [...t, value]);
       }
     });
@@ -84,11 +86,27 @@ function CategoryTable({ tableItems, setTable }) {
               ).toLocaleDateString();
             return (
               <tr
+                className={styles[data.class]}
                 key={ind}
                 onDoubleClick={(e) => setCurrentLevel((c) => [...c, data.name])}
+                onClick={(e) => {
+                  data.class = data.class ? "" : "active";
+                  if (data.class) setSelected((s) => [...s, data]);
+                  else {
+                    const filter_data = selectedItems.filter(
+                      (ele) => ele.name !== data.name
+                    );
+                    setSelected(filter_data);
+                  }
+                }}
               >
                 <td>
-                  <input type="checkbox" value={ind} />
+                  <input
+                    readOnly
+                    type="checkbox"
+                    value={ind}
+                    checked={data.class ? true : false}
+                  />
                 </td>
                 <td className={styles["ceil-container"]}>
                   <span className={styles["tag-name"]}>{data.name}</span>
