@@ -1,8 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import styles from "../article.module.css";
 
 function ToolBox() {
   return (
-    <ul>
+    <ul className={styles["tool-box"]}>
       <li>
         <FontAwesomeIcon icon="bold" />
       </li>

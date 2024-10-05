@@ -8,7 +8,7 @@ function CreateArticle() {
     <>
       <Header />
       <main className={styles["main-container"]}>
-        <h1 className={styles["form-heading"]}>create new article</h1>
+        <h1 className={styles["form-heading"]}>Article Creation</h1>
         <div className={styles["form-container"]}>
           <ArticleForm />
           <ArticleSide />

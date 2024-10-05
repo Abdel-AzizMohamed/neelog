@@ -1,9 +1,10 @@
 import SelectField from "./ArticleSide/SelectField";
+import styles from "./article.module.css";
 
 function ArticleSide() {
   return (
-    <form action="" method="POST">
-      <h2 className="publish-title">publish</h2>
+    <form action="" method="POST" className={styles["article-side"]}>
+      <h2 className={styles["publish-title"]}>publish</h2>
       <SelectField />
       <SelectField />
       <SelectField />

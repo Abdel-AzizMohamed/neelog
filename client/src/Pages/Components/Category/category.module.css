@@ -28,6 +28,7 @@
     padding: 1rem;
     border: 1px solid var(--nat-200);
     border-radius: var(--base-radius);
+    box-shadow: 1px 1px 4px var(--nat-200) inset;
     flex-basis: 30%;
 }
 

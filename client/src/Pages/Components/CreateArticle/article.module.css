@@ -18,6 +18,174 @@
 .main-container .form-container {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
 }
 /* End Global */
+
+/* Start Article form */
+.main-container .article-form {
+    flex-basis: 60%;
+}
+
+.main-container .article-form .form-title,
+.main-container .article-side .publish-title {
+    margin-bottom: 1rem;
+    text-transform: capitalize;
+    color: var(--nat-600);
+    font-weight: 600;
+    font-size: 1rem;
+    border-bottom: 1px solid var(--nat-600);
+    padding-bottom: 0.25rem;
+}
+
+.main-container .article-form input,
+.main-container .article-form textarea {
+    margin: .5rem 0;
+    padding: .5rem;
+    width: 100%;
+    border: 1px solid var(--nat-500);
+    border-radius: var(--base-radius);
+    background-color: var(--nat-100);
+    color: var(--black);
+}
+
+.main-container .article-form input:focus {
+    outline: 1px solid var(--brand-200);
+}
+
+.main-container .article-form .article-tools-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 3rem;
+}
+
+.main-container .article-form .media-container {
+    margin-bottom: .5rem;
+    padding: .4rem;
+    border: 1px solid var(--nat-500);
+    border-radius: var(--base-radius);
+    background-color: var(--nat-200);
+    color: var(--nat-500);
+    font-size: .9rem;
+    cursor: pointer;
+    transition: background var(--trans-dur), color var(--trans-dur);
+}
+
+.main-container .article-form .media-container:hover {
+    background-color: var(--nat-500);
+    color: var(--nat-200)
+}
+
+.main-container .article-form .media-container span {
+    margin-left: .25rem;
+    text-transform: capitalize;
+}
+
+.main-container .article-form .switch-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.main-container .article-form .switch-container li {
+    position: relative;
+    margin-left: .5rem;
+    padding: .5rem;
+    border: 1px solid var(--nat-500);
+    border-width: 1px 1px 0 1px;
+    border-radius: var(--base-radius) var(--base-radius) 0 0;
+    background-color: var(--nat-200);
+    color: var(--nat-500);
+    font-size: .8rem;
+    cursor: pointer;
+    transition: background var(--trans-dur), color var(--trans-dur);
+}
+
+.main-container .article-form .switch-container li:hover {
+    background-color: var(--nat-500);
+    color: var(--nat-200)
+}
+
+.main-container .article-form .switch-container li::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: var(--nat-200);
+}
+
+.main-container .article-form .tool-box {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border: 1px solid var(--nat-500);
+    background-color: var(--nat-200);
+    color: var(--nat-500);
+    font-size: .9rem;
+}
+
+.main-container .article-form .tool-box li {
+    padding: .5rem;
+    cursor: pointer;
+    transition: background var(--trans-dur);
+}
+
+.main-container .article-form .tool-box li:hover {
+    background-color: var(--brand-200);
+}
+
+.main-container .article-form textarea {
+    border-radius: 0 0 var(--base-radius) var(--base-radius);
+    margin: 0;
+    min-height: 400px;
+}
+/* End Article form */
+
+/* Start Article side */
+.main-container .article-side {
+    flex-basis: 35%;
+    padding: 1rem;
+    border: 1px solid var(--nat-200);
+    border-radius: var(--base-radius);
+    box-shadow: 1px 1px 4px var(--nat-200) inset;
+}
+
+.main-container .article-side label {
+    text-transform: capitalize;
+    color: var(--nat-500);
+    font-size: 1rem;
+}
+
+.main-container .article-side select {
+    margin: .5rem 0;
+    padding: .5rem;
+    width: 100%;
+    border: 1px solid var(--nat-500);
+    border-radius: var(--base-radius);
+    background-color: var(--nat-100);
+    color: var(--black);
+    cursor: pointer;
+}
+
+.main-container .article-side input[type="submit"] {
+    padding: .5rem;
+    margin-top: 1rem;
+    width: 100%;
+    border: 1px solid var(--brand-300);
+    border-radius: var(--base-radius);
+    background-color: transparent;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--black);
+    cursor: pointer;
+    transition: background var(--trans-dur), color var(--trans-dur);
+}
+
+.main-container .article-side input[type="submit"]:hover {
+    background-color: var(--brand-200);
+    color: var(--white-fx)
+}
+/* End Article side */
