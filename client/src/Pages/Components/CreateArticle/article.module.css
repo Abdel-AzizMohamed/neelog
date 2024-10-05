@@ -1,0 +1,23 @@
+/* Start Global */
+.main-container {
+    min-height: calc(100vh - 121px);
+    background-color: var(--nat-100);
+    padding: 2rem;
+}
+
+.main-container .form-heading {
+    margin-bottom: 3rem;
+    padding-left: .25rem;
+    border-left: 2px solid var(--nat-600);
+    text-transform: capitalize;
+    color: var(--nat-600);
+    font-weight: 400;
+    font-size: 1.5rem;
+}
+
+.main-container .form-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+/* End Global */

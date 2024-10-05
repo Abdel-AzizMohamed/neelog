@@ -2,13 +2,11 @@ import { useEffect, useState } from "react";
 import Header from "./Components/Header/Header.jsx";
 import CategoryForm from "./Components/Category/CategoryForm.jsx";
 import CategoryTable from "./Components/Category/CategoryTable.jsx";
-import setUpIcons from "../Utils/Icons.jsx";
 import styles from "./Components/Category/category.module.css";
 import "./css/style.css";
 import "./css/media.css";
 
 function CreateCategory() {
-  setUpIcons();
   let [tableItems, setTable] = useState([]),
     [operation, setOperation] = useState(""),
     [selectedItems, setSelected] = useState([]);
@@ -34,6 +32,7 @@ function CreateCategory() {
             setTable={setTable}
             selectedItems={selectedItems}
             setSelected={setSelected}
+            setOperation={setOperation}
           />
         </div>
       </main>

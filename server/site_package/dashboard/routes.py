@@ -31,6 +31,23 @@ def get_collection(category: str, tutorial: str):
     return categories
 
 
+@dashboard.route("/api/dashboard/tagging/filter_siblings")
+def get_sibling_tagging():
+    """Retrieve one Connected tagging data"""
+    parents = [data.get("name") for data in categories.find({})]
+    filter_data = {}
+
+    for parent in parents:
+        parent_id = categories.find_one({"name": parent}).get("_id")
+        siblings = tutorials.find({"category": ObjectId(parent_id)})
+        siblings = replace_id_field(siblings, {"category": parent})
+        filter_data[parent] = siblings
+
+    return jsonify(
+        {"massage": "Fetched one Successfully!", "data": json_util.dumps(filter_data)}
+    )
+
+
 @dashboard.route("/api/dashboard/tagging/filter_one", methods=["POST"])
 def get_one_tagging():
     """Retrieve one Connected tagging data"""
@@ -171,5 +188,19 @@ def edit_category():
             "children": 0,
         }
     )
+
+    return jsonify({"Massage": "Edited Successfully!"})
+
+
+@dashboard.route("/api/dashboard/tagging/delete_one", methods=["POST"])
+def delete_category():
+    """delete a given tag name"""
+    name = request.json.get("name")
+    category = request.json.get("category")
+    tutorial = request.json.get("tutorial")
+
+    collection = get_collection(category, tutorial)
+
+    collection.delete_one({"name": name})
 
     return jsonify({"Massage": "Edited Successfully!"})
