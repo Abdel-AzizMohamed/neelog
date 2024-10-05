@@ -1,10 +1,20 @@
 import styles from "../article.module.css";
 
-function SwitchView() {
+function SwitchView({ view, setView }) {
   return (
     <ul className={styles["switch-container"]}>
-      <li>markdown</li>
-      <li>preview</li>
+      <li
+        className={styles[view === "markdown" ? "active" : ""]}
+        onClick={() => setView("markdown")}
+      >
+        markdown
+      </li>
+      <li
+        className={styles[view === "preview" ? "active" : ""]}
+        onClick={() => setView("preview")}
+      >
+        preview
+      </li>
     </ul>
   );
 }

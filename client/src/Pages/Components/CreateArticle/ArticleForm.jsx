@@ -7,9 +7,10 @@ import AreaField from "./ArticleForm/AreaField";
 import styles from "./article.module.css";
 
 function ArticleForm() {
-  let [title, setTitle] = useState("");
+  let [title, setTitle] = useState(""),
+    [view, setView] = useState("markdown");
 
-  console.log(title);
+  console.log(view);
 
   return (
     <div className={styles["article-form"]}>
@@ -17,10 +18,11 @@ function ArticleForm() {
       <TextField setTitle={setTitle} />
       <div className={styles["article-tools-container"]}>
         <AddMedia />
-        <SwitchView />
+        <SwitchView view={view} setView={setView} />
       </div>
       <ToolBox />
-      <AreaField />
+      <AreaField view={view} />
+      <div className={styles[view === "preview" ? "preview" : "hidden"]}></div>
     </div>
   );
 }
